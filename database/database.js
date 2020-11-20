@@ -1,5 +1,5 @@
 const mysql = require("mysql2")
-const {password} = require('../SECRET')
+const password = require('../SECRET')
 
 const pool = mysql.createPool({
    host: 'localhost',
