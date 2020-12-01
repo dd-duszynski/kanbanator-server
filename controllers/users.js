@@ -1,3 +1,5 @@
+const bcrypt = require('bcryptjs')
+const { validationResult } = require('express-validator');
 const db = require('../database/database');
 const HttpError = require('../models/http-error');
 
@@ -27,6 +29,7 @@ const login = async (req, res, next) => {
    }
 
    let isValidPassword = false;
+   //tu jest fragment do zmiany, bo musze porównać z bcrypt.compare(password, existingUser.password) jakos tak
    try {
       isValidPassword = password === existingUser[0][0].password
    } catch (err) {
@@ -51,8 +54,77 @@ const login = async (req, res, next) => {
 };
 
 const signup = async (req, res, next) => {
-   console.log(req);
-}
+   const errors = validationResult(req);
+   if (!errors.isEmpty()) {
+      return next(
+         new HttpError('Invalid inputs passed, please check your data.', 422)
+      );
+   }
+
+   const { name, email, password } = req.body;
+
+   let existingUser;
+   const queryFindUser = 'SELECT * FROM users WHERE email = ?'
+   try {
+      existingUser = await db.query(queryFindUser, [email])
+   } catch (err) {
+      const error = new HttpError(
+         'Logging in failed, please try again later.',
+         500
+      );
+      return next(error);
+   }
+   if (existingUser[0][0] !== undefined) {
+      const error = new HttpError(
+         'User exists already, please login instead.',
+         422
+      );
+      return next(error);
+   }
+
+   let hashedPassword;
+   try {
+      hashedPassword = await bcrypt.hash(password, 12);
+   } catch (err) {
+      const error = new HttpError(
+         'Could not create user, please try again.',
+         500
+      );
+      return next(error);
+   }
+
+   let newUser;
+   const queryInsertUser = `INSERT INTO USERS (id, name, email, password) VALUES (null, ?, ?, ?)`
+   try {
+      newUser = await db.query(queryInsertUser, [name, email, hashedPassword])
+   } catch (err) {
+      console.log('err', err);
+      const error = new HttpError(
+         'Signing up failed, please try again later.',
+         500
+      );
+      return next(error);
+   }
+
+   let token;
+   try {
+      token = jwt.sign(
+         { name: name, email: email },
+         'secret',
+         { expiresIn: '1h' }
+      );
+   } catch (err) {
+      const error = new HttpError(
+         'Token failed!',
+         500
+      );
+      return next(error);
+   }
+
+   res
+      .status(201)
+      .json({ email: email, token: token });
+};
 
 exports.login = login;
 exports.signup = signup;
