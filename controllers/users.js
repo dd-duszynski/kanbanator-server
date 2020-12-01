@@ -1,9 +1,17 @@
 const bcrypt = require('bcryptjs')
 const { validationResult } = require('express-validator');
+const jwt = require('jsonwebtoken')
 const db = require('../database/database');
 const HttpError = require('../models/http-error');
 
 const login = async (req, res, next) => {
+   const errors = validationResult(req);
+   if (!errors.isEmpty()) {
+      return next(
+         new HttpError('Invalid inputs passed, please check your data.', 422)
+      );
+   }
+
    const { email, password } = req.body;
    console.log(email, password);
 
@@ -29,9 +37,10 @@ const login = async (req, res, next) => {
    }
 
    let isValidPassword = false;
-   //tu jest fragment do zmiany, bo musze porównać z bcrypt.compare(password, existingUser.password) jakos tak
+   //tu jest fragment do zmiany, bo musze porównać z bcrypt.compare(password, existingUser.password) jakos tak\
    try {
-      isValidPassword = password === existingUser[0][0].password
+      isValidPassword = await bcrypt.compare(password, existingUser[0][0].password);
+      // isValidPassword = password === existingUser[0][0].password
    } catch (err) {
       const error = new HttpError(
          'Could not log you in, please check your credentials and try again.',
@@ -48,8 +57,23 @@ const login = async (req, res, next) => {
       return next(error);
    }
 
+   let token;
+   try {
+      token = jwt.sign(
+         { email: email },
+         'secret',
+         { expiresIn: '1h' }
+      );
+   } catch (err) {
+      const error = new HttpError(
+         'Logging in failed, please try again later.',
+         500
+      );
+      return next(error);
+   }
+
    res.json({
-      user: existingUser[0]
+      token: token
    });
 };
 
@@ -108,11 +132,11 @@ const signup = async (req, res, next) => {
 
    let token;
    try {
+      console.log('name', name, 'email', email);
       token = jwt.sign(
-         { name: name, email: email },
-         'secret',
-         { expiresIn: '1h' }
+         { name: name, email: email }, 'secret', { expiresIn: '1h' }
       );
+      console.log('token', token);
    } catch (err) {
       const error = new HttpError(
          'Token failed!',
@@ -123,7 +147,7 @@ const signup = async (req, res, next) => {
 
    res
       .status(201)
-      .json({ email: email, token: token });
+      .json({ token: token });
 };
 
 exports.login = login;

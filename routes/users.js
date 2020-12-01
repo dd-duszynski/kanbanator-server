@@ -12,7 +12,14 @@ router.post(
    ],
    usersControllers.signup
 );
-router.post('/login', usersControllers.login);
+router.post('/login',
+   [
+      check('email').normalizeEmail().isEmail(),
+      check('password').isLength({ min: 5 })
+   ],
+   usersControllers.login
+);
+
 // router.post('/delete-account', usersControllers.deleteAccount);
 
 module.exports = router;
