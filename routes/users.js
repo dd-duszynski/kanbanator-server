@@ -3,8 +3,7 @@ const usersControllers = require('../controllers/users')
 const { check } = require('express-validator');
 const router = express.Router();
 
-router.post(
-   '/signup',
+router.post('/signup',
    [
       check('name').not().isEmpty(),
       check('email').normalizeEmail().isEmail(),
@@ -12,6 +11,7 @@ router.post(
    ],
    usersControllers.signup
 );
+
 router.post('/login',
    [
       check('email').normalizeEmail().isEmail(),

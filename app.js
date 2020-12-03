@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const usersRoutes = require('./routes/users');
 const templatesRoutes = require('./routes/templates');
 const boardsRoutes = require('./routes/boards');
-const usersRoutes = require('./routes/users');
 
 const app = express();
 
@@ -15,9 +15,9 @@ app.use((req, res, next) => {
    next();
 });
 
+app.use('/api/users', usersRoutes)
 app.use('/api/templates', templatesRoutes)
 app.use('/api/boards', boardsRoutes)
-app.use('/api/users', usersRoutes)
 
 app.listen(5000, () => {
    console.log('Start listenning on port:5000');
