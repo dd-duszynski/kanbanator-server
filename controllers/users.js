@@ -91,7 +91,6 @@ const login = async (req, res, next) => {
          new HttpError('Invalid inputs passed, please check your data.', 422)
       );
    }
-
    const { email, password } = req.body;
 
    let existingUser;
@@ -99,8 +98,17 @@ const login = async (req, res, next) => {
 
    try {
       existingUser = await db.query(query, [email])
+      if (existingUser[0].length === 0) {
+         res
+            .status(400)
+            .json({
+               token: null,
+               email: null,
+               userId: null,
+               error: 'Logging in failed, please try again later.'
+            })
+      }
    } catch (err) {
-      console.log(err);
       const error = new HttpError(
          'Logging in failed, please try again later.',
          500
@@ -154,7 +162,8 @@ const login = async (req, res, next) => {
       .json({
          token: token,
          email: email,
-         userId: existingUser[0][0].id
+         userId: existingUser[0][0].id,
+         error: null
       });
 };
 
