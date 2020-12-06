@@ -18,14 +18,21 @@ const signup = async (req, res, next) => {
    const queryFindUser = 'SELECT * FROM users WHERE email = ?'
    try {
       existingUser = await db.query(queryFindUser, [email])
+      if (existingUser[0].length > 0) {
+         res
+            .status(400)
+            .json({
+               token: null,
+               email: null,
+               userId: null,
+               error: 'This e-mail already exists!'
+            })
+      }
    } catch (err) {
       console.log(err);
-      const error = new HttpError(
-         'Logging in failed, please try again later.',
-         500
-      );
       return next(error);
    }
+
    if (existingUser[0][0] !== undefined) {
       const error = new HttpError(
          'User exists already, please login instead.',
@@ -58,30 +65,13 @@ const signup = async (req, res, next) => {
       );
       return next(error);
    }
-   console.log('newUser', newUser);
 
-   let token;
-   try {
-      console.log('name', name, 'email', email);
-      token = jwt.sign(
-         { name: name, email: email }, 'secret', { expiresIn: '2h' }
-      );
-      console.log('token', token);
-   } catch (err) {
-      console.log(err);
-      const error = new HttpError(
-         'Token failed!',
-         500
-      );
-      return next(error);
-   }
-   res
-      .status(201)
-      .json({
-         token: token,
-         email: email,
-         name: name
-      });
+   res.status(201).json({
+      email: email,
+      name: name,
+      message: "An account has been created. Please Log In.",
+      error: null
+   });
 };
 
 const login = async (req, res, next) => {
@@ -94,10 +84,10 @@ const login = async (req, res, next) => {
    const { email, password } = req.body;
 
    let existingUser;
-   const query = 'SELECT * FROM users WHERE email = ?'
+   const queryFindUser = 'SELECT * FROM users WHERE email = ?'
 
    try {
-      existingUser = await db.query(query, [email])
+      existingUser = await db.query(queryFindUser, [email])
       if (existingUser[0].length === 0) {
          res
             .status(400)
@@ -109,10 +99,7 @@ const login = async (req, res, next) => {
             })
       }
    } catch (err) {
-      const error = new HttpError(
-         'Logging in failed, please try again later.',
-         500
-      );
+      console.log(err);
       return next(error);
    }
 
