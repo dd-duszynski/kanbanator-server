@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `kanbanator` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `kanbanator`;
 -- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: localhost    Database: kanbanator
@@ -27,11 +25,11 @@ DROP TABLE IF EXISTS `cards`;
 CREATE TABLE `cards` (
   `card_id` int NOT NULL AUTO_INCREMENT,
   `card_title` varchar(100) NOT NULL,
-  `card_description` varchar(100) DEFAULT NULL,
+  `card_description` varchar(600) DEFAULT NULL,
   `related_list` int NOT NULL,
   `labels` int DEFAULT NULL,
   PRIMARY KEY (`card_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -40,7 +38,7 @@ CREATE TABLE `cards` (
 
 LOCK TABLES `cards` WRITE;
 /*!40000 ALTER TABLE `cards` DISABLE KEYS */;
-INSERT INTO `cards` VALUES (1,'task1','Description for task 1',1,1),(2,'task2','Description for task 2',1,0),(3,'task3','Description for task 3',1,0),(4,'task4','Description for task 4',1,0),(5,'task5','Description for task 5',2,2),(6,'task6','Description for task 6',2,2),(7,'task7','Description for task 7',2,2),(8,'task8','Description for task 8',2,3),(9,'task9','Description for task 9',2,3),(10,'task10','Description for task 10',2,4),(11,'task11','Description for task 11',2,4),(12,'task12','Description for task 12',2,5),(13,'task5','Description for task 5',3,1),(14,'task6','Description for task 6',4,2),(15,'task7','Description for task 7',5,2);
+INSERT INTO `cards` VALUES (16,'What top 3 problems do you face ?','Top 3 problems you face',1,0),(17,'For whom are we creating value?','For whom are we creating value? Who are our most important customers? Target customer?',2,0),(18,'What unique value do we deliver to the customer?','Single, clear, compelling message that states why you are different and worth buying\nWhich one of our customer’s problems are we helping to solve? What bundles of products and services are we offering to each Customer Segment? Which customer needs are we satisfying?',3,0),(19,'Top 3 Solutions to your Problems',NULL,4,0),(20,'Can\'t be easily copied or bought','What are your competitive advantages that mean you can\'t be easily copied or bought?',5,0),(21,'For what value are our customers really willing to pay?','Revenue model, Life time value revenue...',6,0),(22,'What are the most important costs inherent in our business model?','Revenue model, Life time value revenue...',7,0),(23,'Activity that drives retention/revenue',NULL,8,0),(24,'Through which Channels do our Customer Segments want to be reached?','Path to customers',9,0);
 /*!40000 ALTER TABLE `cards` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +51,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-21 19:13:13
+-- Dump completed on 2020-12-09 17:35:37

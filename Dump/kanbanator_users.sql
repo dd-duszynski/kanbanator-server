@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `kanbanator` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `kanbanator`;
 -- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: localhost    Database: kanbanator
@@ -27,8 +25,10 @@ DROP TABLE IF EXISTS `users`;
 CREATE TABLE `users` (
   `id` int NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
+  `email` varchar(100) NOT NULL,
+  `password` varchar(100) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -37,7 +37,7 @@ CREATE TABLE `users` (
 
 LOCK TABLES `users` WRITE;
 /*!40000 ALTER TABLE `users` DISABLE KEYS */;
-INSERT INTO `users` VALUES (1,'Michael'),(2,'James'),(3,'Karolina'),(5,'max'),(6,'Damian');
+INSERT INTO `users` VALUES (12,'krzys','krzys@op.pl','$2a$12$oVyawhNe8.Up2cyLrPaR/ekMXxDgQ36rrnEZBIoY3AOApB8PPSVS.'),(13,'marcin','marcin@op.pl','$2a$12$G9zTNF3g1DWDTZcdbyv44ef6eK11Nv7fNkPibKEv2I3S3k5g.dAUm'),(14,'ola','ola@op.pl','$2a$12$YCepNkIPbx9mnmnyXynayeRv0d5/f/wsHN94.qeCPsduooaH50uXC'),(24,'damian','damian@op.pl','$2a$12$2e7dLE/f1.QlGRuYTgKRmOH0zcQtDOUfX7oiM5Xa2C.wPKE0BzHXi'),(34,'edyta','edyta@op.pl','$2a$12$NMS/ti81MiVIjt.naNedne3C0MrWgNkwNznnGMhHyMWkSHfRd1oIi'),(35,'Viola','viola@op.pl','$2a$12$UeE8jc5nK1fdqC8ZQLE80u4Va2wqkXd7eCIBPNwrxuhYAkKdQMkJ6'),(36,'aleks','aleks@op.pl','$2a$12$fe3DWeADMgAj6oPXtqGMXORfif9wh3nHY0VXCAywD4qyHFup1U0k2'),(37,'milena','milena@op.pl','$2a$12$98xq9mXMU8BfItt/EsGwq.U8veTT808dJuz2GVtDI5dfK3IwaqlOW'),(38,'Hubert','hubert@op.pl','$2a$12$fqN6PEi3ILzCyQd.HPvTAuVTfTVBgomksoG6FrT3l.WCoVXYuC.0G'),(39,'grzegorz','grzegorz@op.pl','$2a$12$aK7U8a3hVWOXTy4JHaFLp.2ljDzNb.8tZ8F2VYOlbqL.IiLjagP8e'),(40,'Agata','agata@op.pl','$2a$12$kC6o7UtmTR1xz3i4CIJzmOYRok.1fJPpUW.jQhlpZvy8F43HOVZfm'),(41,'Zuzia','zuzia@op.pl','$2a$12$QgR4xBItPTiqrDoWbklvwOtGvxoRlYlBWzgejCqm67mx/hqmUv43C'),(42,'Grazyna','grazyna@op.pl','$2a$12$./E3RQdcNoEl3vel7x792e295oURJ22elVkfT8PxKuZjjE2vDtT5a'),(43,'','@','$2a$12$stuWIf/Fy9kMW/L6T4MQru7smejD9D76/NJOKl5auj.KZiqWZF0hi'),(44,'bozena','bozena@op.pl','$2a$12$UrBJFt9tT/2HAY9xcT4tbeZu4IdxXFslXDimFkQqbm37QyKgrIYS6');
 /*!40000 ALTER TABLE `users` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -50,4 +50,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-21 19:13:14
+-- Dump completed on 2020-12-09 17:35:38

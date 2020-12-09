@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `kanbanator` /*!40100 DEFAULT CHARACTER SET utf8 */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `kanbanator`;
 -- MySQL dump 10.13  Distrib 8.0.22, for Win64 (x86_64)
 --
 -- Host: localhost    Database: kanbanator
@@ -27,9 +25,9 @@ DROP TABLE IF EXISTS `boards`;
 CREATE TABLE `boards` (
   `id` int unsigned NOT NULL AUTO_INCREMENT,
   `title` varchar(60) NOT NULL DEFAULT '',
-  `description` varchar(255) NOT NULL DEFAULT '',
+  `description` text NOT NULL,
   `image_url` varchar(255) NOT NULL DEFAULT '',
-  `author` varchar(255) NOT NULL DEFAULT '',
+  `author` int NOT NULL,
   `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `is_favorite` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
@@ -42,7 +40,7 @@ CREATE TABLE `boards` (
 
 LOCK TABLES `boards` WRITE;
 /*!40000 ALTER TABLE `boards` DISABLE KEYS */;
-INSERT INTO `boards` VALUES (1,'boards 1','Description for table 1','https://images.pexels.com/photos/5836/yellow-metal-design-decoration.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500','Damian','2020-11-15 17:09:37',0),(4,'boards 4','Description for table 4','https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500','Tomasz','2020-11-15 17:09:37',0),(6,'Dom','Sprzątanie i finanse','https://images.pexels.com/photos/5836/yellow-metal-design-decoration.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500','Damian','2020-11-15 17:51:39',0),(7,'Kanbanator','This is description','','','2020-11-15 18:11:25',0),(8,'Kanbanator','This is description','','','2020-11-15 18:12:13',0),(9,'Kanbanator','This is description','','','2020-11-15 18:12:31',0),(10,'Kanbanator','This is description','','','2020-11-15 18:17:15',0),(11,'Kanbanator','This is description','','','2020-11-15 18:17:28',0),(12,'Kanbanator','This is description','','','2020-11-15 18:17:53',0),(13,'Kanbanator','This is description','','','2020-11-15 18:18:02',0),(14,'Board 11','This is description 11','','','2020-11-15 18:23:17',0),(15,'Board 11','This is description 11','','','2020-11-15 18:23:24',0),(16,'Board 12','This is description 12','','','2020-11-15 18:23:59',0);
+INSERT INTO `boards` VALUES (1,'board 1','Description for table 1','https://images.pexels.com/photos/5836/yellow-metal-design-decoration.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500',24,'2020-11-15 17:09:37',0),(4,'board 2','Description for table 2','https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',24,'2020-11-15 17:09:37',1),(6,'board 3','Description for table 3','https://images.pexels.com/photos/572056/pexels-photo-572056.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=1600',24,'2020-11-15 17:51:39',0),(7,'board 4','Description for table 4','https://images.pexels.com/photos/669996/pexels-photo-669996.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=1600',24,'2020-11-15 18:11:25',0);
 /*!40000 ALTER TABLE `boards` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -55,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-11-21 19:13:14
+-- Dump completed on 2020-12-09 17:35:38
