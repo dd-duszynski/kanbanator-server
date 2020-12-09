@@ -1,14 +1,16 @@
 const db = require('../database/database');
 
 const getTemplates = async (req, res, next) => {
-   let templates;
    const query = 'SELECT * FROM templates'
    await db.execute(query)
-      .then(result => templates = result)
+      .then(result => {
+         res.status(201).json({
+            templates: result[0]
+         })
+      })
       .catch(err => {
          console.log('getTemplates', err);
       })
-   res.json(templates[0]);
 }
 
 const getTemplateByLink = async (req, res, next) => {
