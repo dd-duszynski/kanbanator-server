@@ -100,10 +100,12 @@ const login = async (req, res, next) => {
    const { email, password } = req.body;
 
    let existingUser;
+   let boards;
    const queryFindUser = 'SELECT * FROM users WHERE email = ?'
+   const queryBoards = 'SELECT * FROM boards WHERE author = ? '
    try {
-      existingUser = await db.query(queryFindUser, [email])
-      if (existingUser[0].length === 0) {
+      [existingUser] = await db.query(queryFindUser, [email])
+      if (existingUser.length === 0) {
          res
             .status(400)
             .json({
@@ -113,23 +115,32 @@ const login = async (req, res, next) => {
                error: 'Logging in failed, please try again later.'
             })
       }
+      [boards] = await db.query(queryBoards, [existingUser[0].id])
    } catch (err) {
-      console.log(err);
-      return next(error);
+      res
+         .status(400)
+         .json({
+            token: null,
+            email: null,
+            userId: null,
+            error: err
+         })
    }
 
    if (!existingUser) {
-      const error = new HttpError(
-         'There is no user with the given e-mail address.',
-         403
-      );
-      return next(error);
+      res
+         .status(403)
+         .json({
+            token: null,
+            email: null,
+            userId: null,
+            error: 'There is no user with the given e-mail address.'
+         })
    }
 
    let isValidPassword = false;
-
    try {
-      isValidPassword = await bcrypt.compare(password, existingUser[0][0].password);
+      isValidPassword = await bcrypt.compare(password, existingUser[0].password);
    } catch (err) {
       console.log(err);
       const error = new HttpError(
@@ -164,8 +175,9 @@ const login = async (req, res, next) => {
       .json({
          token: token,
          email: email,
-         userId: existingUser[0][0].id,
-         error: null
+         userId: existingUser[0].id,
+         error: null,
+         boards: boards
       });
 };
 

@@ -17,17 +17,21 @@ const getBoards = async (req, res, next) => {
       })
 }
 
-
 const getBoardById = async (req, res, next) => {
    const boardId = req.params.bid;
-   let board;
    const query = 'SELECT * FROM boards WHERE id = ?'
    await db.execute(query, [boardId])
-      .then(result => board = result)
+      .then(result => {
+         return res.status(201).json({
+            choosenBoard: result[0]
+         })
+      })
       .catch(err => {
          console.log('getBoardById', err);
+         return res.status(422).json({
+            error: err
+         })
       })
-   res.json(board[0]);
 }
 
 const createBoard = async (req, res, next) => {
