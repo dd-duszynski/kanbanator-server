@@ -5,6 +5,6 @@ const router = express.Router();
 
 router.get('/', templatesControllers.getTemplates);
 router.get('/:tid', templatesControllers.getTemplateByLink);
-router.get('/lists/:tid', templatesControllers.getLists);
+router.get('/lists/:tid', templatesControllers.getListsByLink);
 
 module.exports = router;

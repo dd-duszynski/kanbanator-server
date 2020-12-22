@@ -14,8 +14,7 @@ const getTemplates = async (req, res, next) => {
 }
 
 const getTemplateByLink = async (req, res, next) => {
-   const templateId = req.params.tid;
-   let template;
+   const templateLink = req.params.tid;
    const query = `
    SELECT * FROM cards c
    RIGHT JOIN lists l	
@@ -23,31 +22,36 @@ const getTemplateByLink = async (req, res, next) => {
    JOIN templates t
       ON l.related_board = t.id
    WHERE t.link = ?`
-   await db.execute(query, [templateId])
-      .then(result => template = result)
+   await db.execute(query, [templateLink])
+      .then(result => {
+         res.status(201).json({
+            singleTemplate: result[0]
+         })
+      })
       .catch(err => {
          console.log('getTemplateByLink', err);
       })
-   res.json(template);
 }
 
-const getLists = async (req, res, next) => {
-   const templateId = req.params.tid;
-   let lists;
+const getListsByLink = async (req, res, next) => {
+   const templateLink = req.params.tid;
    const query = `
    SELECT * FROM lists l
    JOIN templates t
       ON l.related_board = t.id
    WHERE t.link = ?`
-   await db.execute(query, [templateId])
-      .then(result => lists = result)
-      .catch(err => {
-         console.log('getLists', err);
+   await db.execute(query, [templateLink])
+      .then(result => {
+         res.status(201).json({
+            lists: result[0]
+         })
       })
-   res.json(lists);
+      .catch(err => {
+         console.log('getListsByLink', err);
+      })
 }
 
 
 exports.getTemplates = getTemplates;
 exports.getTemplateByLink = getTemplateByLink;
-exports.getLists = getLists;
+exports.getListsByLink = getListsByLink;
