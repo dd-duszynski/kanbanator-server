@@ -2,7 +2,7 @@ const db = require('../database/database');
 
 const getBoards = async (req, res, next) => {
    const { userId } = req.body;
-   const query = 'SELECT * FROM boards WHERE author = ?'
+   const query = 'SELECT * FROM boards WHERE board_author = ?'
    await db.execute(query, [userId])
       .then(result => {
          return res.status(201).json({
@@ -19,12 +19,33 @@ const getBoards = async (req, res, next) => {
 
 const getBoardById = async (req, res, next) => {
    const boardId = req.params.bid;
-   const query = 'SELECT * FROM boards WHERE id = ?'
-   await db.execute(query, [boardId])
-      .then(result => {
-         return res.status(201).json({
-            choosenBoard: result[0]
+   let choosenBoard = {
+      lists: [],
+      cards: []
+   }
+   const queryForLists = `
+      SELECT * FROM boards_lists l
+         JOIN boards b
+         ON l.list_related_board = b.board_id
+         WHERE b.board_id = ?
+   `
+   const queryForCards = `
+      SELECT * FROM boards_cards c
+         WHERE c.card_related_board = ?
+   `
+   await db.execute(queryForLists, [boardId])
+      .then(lists => {
+         choosenBoard.lists = lists[0]
+      })
+      .catch(err => {
+         return res.status(422).json({
+            error: err
          })
+      })
+   await db.execute(queryForCards, [boardId])
+      .then(cards => {
+         choosenBoard.cards = cards[0]
+         return res.status(201).json(choosenBoard)
       })
       .catch(err => {
          console.log('getBoardById', err);

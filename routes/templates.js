@@ -4,7 +4,6 @@ const templatesControllers = require('../controllers/templates')
 const router = express.Router();
 
 router.get('/', templatesControllers.getTemplates);
-router.get('/:tid', templatesControllers.getTemplateByLink);
-router.get('/lists/:tid', templatesControllers.getListsByLink);
+router.get('/:tlink', templatesControllers.getTemplateByLink);
 
 module.exports = router;

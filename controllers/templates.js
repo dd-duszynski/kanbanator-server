@@ -4,9 +4,7 @@ const getTemplates = async (req, res, next) => {
    const query = 'SELECT * FROM templates'
    await db.execute(query)
       .then(result => {
-         res.status(201).json({
-            templates: result[0]
-         })
+         res.status(201).json(result[0])
       })
       .catch(err => {
          console.log('getTemplates', err);
@@ -14,44 +12,46 @@ const getTemplates = async (req, res, next) => {
 }
 
 const getTemplateByLink = async (req, res, next) => {
-   const templateLink = req.params.tid;
-   const query = `
-   SELECT * FROM cards c
-   RIGHT JOIN lists l	
-      ON c.related_list = l.list_id
-   JOIN templates t
-      ON l.related_board = t.id
-   WHERE t.link = ?`
-   await db.execute(query, [templateLink])
-      .then(result => {
-         res.status(201).json({
-            singleTemplate: result[0]
-         })
-      })
-      .catch(err => {
-         console.log('getTemplateByLink', err);
-      })
-}
+   const templateLink = req.params.tlink;
+   let choosenTemplate = {
+      lists: [],
+      cards: []
+   }
 
-const getListsByLink = async (req, res, next) => {
-   const templateLink = req.params.tid;
-   const query = `
-   SELECT * FROM lists l
-   JOIN templates t
-      ON l.related_board = t.id
-   WHERE t.link = ?`
-   await db.execute(query, [templateLink])
-      .then(result => {
-         res.status(201).json({
-            lists: result[0]
-         })
+   const queryForLists = `
+      SELECT * FROM templates_lists l
+      JOIN templates t
+      ON l.list_related_template = t.template_id
+      WHERE t.template_link = ?
+   `
+
+   const queryForCards = `
+      SELECT * FROM templates_cards c
+      WHERE c.card_related_template = ?
+   `
+
+   await db.execute(queryForLists, [templateLink])
+      .then(lists => {
+         choosenTemplate.lists = lists[0]
       })
       .catch(err => {
-         console.log('getListsByLink', err);
+         return res.status(422).json({
+            error: err
+         })
+      })
+
+   await db.execute(queryForCards, [templateLink])
+      .then(cards => {
+         choosenTemplate.cards = cards[0]
+         return res.status(201).json(choosenTemplate)
+      })
+      .catch(err => {
+         return res.status(422).json({
+            error: err
+         })
       })
 }
 
 
 exports.getTemplates = getTemplates;
 exports.getTemplateByLink = getTemplateByLink;
-exports.getListsByLink = getListsByLink;

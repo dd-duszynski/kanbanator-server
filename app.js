@@ -5,7 +5,6 @@ const templatesRoutes = require('./routes/templates');
 const boardsRoutes = require('./routes/boards');
 
 const app = express();
-
 app.use(bodyParser.json());
 
 app.use((req, res, next) => {

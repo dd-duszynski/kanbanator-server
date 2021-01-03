@@ -1,6 +1,7 @@
 const express = require('express')
-const usersControllers = require('../controllers/users')
 const { check } = require('express-validator');
+const usersControllers = require('../controllers/users')
+
 const router = express.Router();
 
 router.post('/signup',
