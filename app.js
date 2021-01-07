@@ -4,6 +4,7 @@ const usersRoutes = require('./routes/users');
 const templatesRoutes = require('./routes/templates');
 const boardsRoutes = require('./routes/boards');
 const cardsRoutes = require('./routes/cards');
+const listsRoutes = require('./routes/lists');
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use('/api/users', usersRoutes)
 app.use('/api/templates', templatesRoutes)
 app.use('/api/boards', boardsRoutes)
 app.use('/api/cards', cardsRoutes)
+app.use('/api/lists', listsRoutes)
 
 app.listen(5000, () => {
    console.log('Start listenning on port:5000');
