@@ -23,14 +23,14 @@ DROP TABLE IF EXISTS `boards`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `boards` (
-  `board_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `board_title` varchar(60) NOT NULL DEFAULT '',
-  `board_description` text NOT NULL,
-  `board_image_url` varchar(255) NOT NULL DEFAULT '',
-  `board_author` int NOT NULL,
-  `board_creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `board_is_favorite` tinyint NOT NULL DEFAULT '0',
-  PRIMARY KEY (`board_id`)
+  `id` int unsigned NOT NULL AUTO_INCREMENT,
+  `title` varchar(60) NOT NULL DEFAULT '',
+  `description` text NOT NULL,
+  `image_url` varchar(255) NOT NULL DEFAULT '',
+  `author` int NOT NULL,
+  `creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `is_favorite` tinyint NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -40,7 +40,7 @@ CREATE TABLE `boards` (
 
 LOCK TABLES `boards` WRITE;
 /*!40000 ALTER TABLE `boards` DISABLE KEYS */;
-INSERT INTO `boards` VALUES (1,'board 1','Description for table 1','https://images.pexels.com/photos/5836/yellow-metal-design-decoration.jpg?auto=compress&cs=tinysrgb&dpr=1&w=1000',24,'2020-11-15 17:09:37',0),(4,'board 2','Description for table 2','https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=1000',24,'2020-11-15 17:09:37',1),(6,'board 3','Description for table 3','https://images.pexels.com/photos/572056/pexels-photo-572056.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=1000',24,'2020-11-15 17:51:39',0),(7,'board 4','Description for table 4','https://images.pexels.com/photos/669996/pexels-photo-669996.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=1000',24,'2020-11-15 18:11:25',0);
+INSERT INTO `boards` VALUES (1,'board 1','Description for table 1','https://images.pexels.com/photos/5836/yellow-metal-design-decoration.jpg?auto=compress&cs=tinysrgb&dpr=1&w=500',24,'2020-11-15 17:09:37',0),(4,'board 2','Description for table 2','https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500',24,'2020-11-15 17:09:37',1),(6,'board 3','Description for table 3','https://images.pexels.com/photos/572056/pexels-photo-572056.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=1600',24,'2020-11-15 17:51:39',0),(7,'board 4','Description for table 4','https://images.pexels.com/photos/669996/pexels-photo-669996.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=1600',24,'2020-11-15 18:11:25',0);
 /*!40000 ALTER TABLE `boards` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -53,4 +53,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2021-01-07 19:17:00
+-- Dump completed on 2020-12-09 17:35:38

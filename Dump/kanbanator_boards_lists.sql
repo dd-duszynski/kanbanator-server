@@ -16,32 +16,28 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `boards`
+-- Table structure for table `boards_lists`
 --
 
-DROP TABLE IF EXISTS `boards`;
+DROP TABLE IF EXISTS `boards_lists`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `boards` (
-  `board_id` int unsigned NOT NULL AUTO_INCREMENT,
-  `board_title` varchar(60) NOT NULL DEFAULT '',
-  `board_description` text NOT NULL,
-  `board_image_url` varchar(255) NOT NULL DEFAULT '',
-  `board_author` int NOT NULL,
-  `board_creation_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `board_is_favorite` tinyint NOT NULL DEFAULT '0',
-  PRIMARY KEY (`board_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=17 DEFAULT CHARSET=utf8;
+CREATE TABLE `boards_lists` (
+  `list_id` int NOT NULL DEFAULT '0',
+  `list_title` varchar(30) NOT NULL,
+  `list_privacy` varchar(30) NOT NULL,
+  `list_related_board` int NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `boards`
+-- Dumping data for table `boards_lists`
 --
 
-LOCK TABLES `boards` WRITE;
-/*!40000 ALTER TABLE `boards` DISABLE KEYS */;
-INSERT INTO `boards` VALUES (1,'board 1','Description for table 1','https://images.pexels.com/photos/5836/yellow-metal-design-decoration.jpg?auto=compress&cs=tinysrgb&dpr=1&w=1000',24,'2020-11-15 17:09:37',0),(4,'board 2','Description for table 2','https://images.pexels.com/photos/4144923/pexels-photo-4144923.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=1000',24,'2020-11-15 17:09:37',1),(6,'board 3','Description for table 3','https://images.pexels.com/photos/572056/pexels-photo-572056.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=1000',24,'2020-11-15 17:51:39',0),(7,'board 4','Description for table 4','https://images.pexels.com/photos/669996/pexels-photo-669996.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=1000',24,'2020-11-15 18:11:25',0);
-/*!40000 ALTER TABLE `boards` ENABLE KEYS */;
+LOCK TABLES `boards_lists` WRITE;
+/*!40000 ALTER TABLE `boards_lists` DISABLE KEYS */;
+INSERT INTO `boards_lists` VALUES (70,'Backlog','private',1),(71,'Preparing Content','private',1),(72,'Awaiting Review','private',1),(75,'Planned','private',4),(76,'To Do','private',4),(77,'Doing','private',4),(80,'USEFUL STUFF','private',6),(81,'Draft','private',6),(82,'PENDING EDITING','private',6),(84,'TO DO','private',7),(85,'BLOCKING','private',7),(86,'IN PROGRESS','private',7);
+/*!40000 ALTER TABLE `boards_lists` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
