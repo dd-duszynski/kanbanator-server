@@ -102,7 +102,7 @@ const login = async (req, res, next) => {
    let existingUser;
    let boards;
    const queryFindUser = 'SELECT * FROM users WHERE email = ?'
-   const queryBoards = 'SELECT * FROM boards WHERE author = ? '
+   const queryBoards = 'SELECT * FROM boards WHERE board_author = ? '
    try {
       [existingUser] = await db.query(queryFindUser, [email])
       if (existingUser.length === 0) {
