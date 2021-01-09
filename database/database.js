@@ -6,7 +6,8 @@ const pool = mysql.createPool({
    user: 'root',
    password: password,
    database: 'kanbanator',
-   multipleStatements: true
+   multipleStatements: true,
+   waitForConnections: true,
 })
 
 const promisePool = pool.promise();

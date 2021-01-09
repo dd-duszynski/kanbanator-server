@@ -56,16 +56,14 @@ const getBoardById = async (req, res, next) => {
 }
 
 const createBoard = async (req, res, next) => {
-   let settings = {
-      title: `Board ${req.params.bid}`,
-      description: `This is description ${req.params.bid}`,
-   }
-   const query = 'INSERT INTO boards SET ?'
-   await db.query(query, settings, (err, result) => {
-      if (err) throw err;
-      console.log(result);
-   })
-   res.json(`Post ${req.params.bid} added ...`);
+   const { title, description, image_url, author } = req.body
+   console.log(title, description, image_url, author);
+   const query = `INSERT INTO boards VALUES(null, '${title}', '${description}', '${image_url}', ${author}, now(), 0)`
+   await db.execute(query)
+      .catch(err => {
+         console.log('[err]', err);
+      })
+   res.json(`Board ${title} added ...`);
 }
 
 const deleteBoard = async (req, res, next) => {
