@@ -4,6 +4,7 @@ const usersControllers = require('../controllers/users')
 
 const router = express.Router();
 
+//http://localhost:5000/api/users
 router.post('/signup',
    [
       check('name').not().isEmpty(),

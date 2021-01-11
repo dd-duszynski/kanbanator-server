@@ -17,7 +17,7 @@ const getBoards = async (req, res, next) => {
       })
 }
 
-const getBoardById = async (req, res, next) => {
+const getSingleBoard = async (req, res, next) => {
    const boardId = req.params.bid;
    let choosenBoard = {
       lists: [],
@@ -25,7 +25,7 @@ const getBoardById = async (req, res, next) => {
    }
    const queryForLists = `
       SELECT * FROM boards_lists l
-         JOIN boards b
+         RIGHT JOIN boards b
          ON l.list_related_board = b.board_id
          WHERE b.board_id = ?
    `
@@ -48,7 +48,7 @@ const getBoardById = async (req, res, next) => {
          return res.status(201).json(choosenBoard)
       })
       .catch(err => {
-         console.log('getBoardById', err);
+         console.log('getSingleBoard', err);
          return res.status(422).json({
             error: err
          })
@@ -56,14 +56,26 @@ const getBoardById = async (req, res, next) => {
 }
 
 const createBoard = async (req, res, next) => {
-   const { title, description, image_url, author } = req.body
-   console.log(title, description, image_url, author);
-   const query = `INSERT INTO boards VALUES(null, '${title}', '${description}', '${image_url}', ${author}, now(), 0)`
-   await db.execute(query)
-      .catch(err => {
-         console.log('[err]', err);
+   const { boardId, title, description, image_url, author } = req.body
+   console.log(boardId, title, description, image_url, author);
+   const queryBoard = `INSERT INTO boards VALUES(${boardId}, '${title}', '${description}', '${image_url}', ${author}, now(), 0)`
+   const queryList = `INSERT INTO boards_lists VALUES(null, "Default Title", "private", ${boardId})`
+   await db.execute(queryBoard)
+      .then((data) => {
+         console.log(`Board ${title} added successfully`);
       })
-   res.json(`Board ${title} added ...`);
+      .catch(err => {
+         console.log('[err - queryBoard]', err);
+      })
+   await db.execute(queryList)
+      .then((data) => {
+         console.log(`Lists 'Default Title' added successfully`);
+      })
+      .catch(err => {
+         console.log('[err - queryList]', err);
+      })
+
+   res.json(`Board ${title} & Default list added ...`);
 }
 
 const deleteBoard = async (req, res, next) => {
@@ -78,6 +90,6 @@ const deleteBoard = async (req, res, next) => {
 }
 
 exports.getBoards = getBoards;
-exports.getBoardById = getBoardById;
+exports.getSingleBoard = getSingleBoard;
 exports.createBoard = createBoard;
 exports.deleteBoard = deleteBoard;
