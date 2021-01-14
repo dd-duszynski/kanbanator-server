@@ -78,6 +78,25 @@ const createBoard = async (req, res, next) => {
    res.json(`Board ${title} & Default list added ...`);
 }
 
+const editBoard = async (req, res, next) => {
+   const boardId = req.params.bid;
+   const {title, description} = req.body
+   const query = `
+      UPDATE boards
+         SET 
+            board_title = "${title}",
+            board_description = "${description}"
+         WHERE board_id = ${boardId}
+    
+   ` 
+   await db.execute(query, [boardId])
+      .then(result => console.log('then', result))
+      .catch(err => {
+         console.log('[editBoard - ERROR]', err);
+      })
+   res.send('Board edited successful...');
+}
+
 const deleteBoard = async (req, res, next) => {
    const boardId = req.params.bid;
    const query = 'DELETE FROM boards WHERE id = ?'
@@ -93,3 +112,4 @@ exports.getBoards = getBoards;
 exports.getSingleBoard = getSingleBoard;
 exports.createBoard = createBoard;
 exports.deleteBoard = deleteBoard;
+exports.editBoard = editBoard;

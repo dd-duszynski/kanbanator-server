@@ -20,7 +20,7 @@ const signup = async (req, res, next) => {
    const { name, email, password } = req.body;
 
    let existingUser;
-   const queryFindUser = 'SELECT * FROM users WHERE email = ?'
+   const queryFindUser = 'SELECT * FROM users WHERE user_email = ?'
    try {
       existingUser = await db.query(queryFindUser, [email])
       if (existingUser[0].length > 0) {
@@ -59,7 +59,7 @@ const signup = async (req, res, next) => {
    }
 
    let newUser;
-   const queryInsertUser = `INSERT INTO USERS (id, name, email, password) VALUES (null, ?, ?, ?)`
+   const queryInsertUser = `INSERT INTO USERS (user_id, user_name, user_email, user_password) VALUES (null, ?, ?, ?)`
    try {
       newUser = await db.query(queryInsertUser, [name, email, hashedPassword])
    } catch (err) {
@@ -99,9 +99,9 @@ const login = async (req, res, next) => {
 
    const { email, password } = req.body;
 
-   let existingUser;
-   let boards;
-   const queryFindUser = 'SELECT * FROM users WHERE email = ?'
+   let existingUser, boards;
+
+   const queryFindUser = 'SELECT * FROM users WHERE user_email = ?'
    const queryBoards = 'SELECT * FROM boards WHERE board_author = ? '
    try {
       [existingUser] = await db.query(queryFindUser, [email])
@@ -115,7 +115,7 @@ const login = async (req, res, next) => {
                error: 'Logging in failed, please try again later.'
             })
       }
-      [boards] = await db.query(queryBoards, [existingUser[0].id])
+      [boards] = await db.query(queryBoards, [existingUser[0].user_id])
    } catch (err) {
       res
          .status(400)
@@ -140,7 +140,7 @@ const login = async (req, res, next) => {
 
    let isValidPassword = false;
    try {
-      isValidPassword = await bcrypt.compare(password, existingUser[0].password);
+      isValidPassword = await bcrypt.compare(password, existingUser[0].user_password);
    } catch (err) {
       console.log(err);
       const error = new HttpError(
@@ -175,7 +175,7 @@ const login = async (req, res, next) => {
       .json({
          token: token,
          email: email,
-         userId: existingUser[0].id,
+         userId: existingUser[0].user_id,
          error: null,
          boards: boards
       });
