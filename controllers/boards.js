@@ -80,7 +80,7 @@ const createBoard = async (req, res, next) => {
 
 const editBoard = async (req, res, next) => {
    const boardId = req.params.bid;
-   const {title, description} = req.body
+   const { title, description } = req.body
    const query = `
       UPDATE boards
          SET 
@@ -88,7 +88,7 @@ const editBoard = async (req, res, next) => {
             board_description = "${description}"
          WHERE board_id = ${boardId}
     
-   ` 
+   `
    await db.execute(query, [boardId])
       .then(result => console.log('then', result))
       .catch(err => {
@@ -97,15 +97,41 @@ const editBoard = async (req, res, next) => {
    res.send('Board edited successful...');
 }
 
-const deleteBoard = async (req, res, next) => {
+const deleteBoard = (req, res, next) => {
    const boardId = req.params.bid;
-   const query = 'DELETE FROM boards WHERE id = ?'
-   await db.execute(query, [boardId])
-      .then(result => console.log('then', result))
-      .catch(err => {
-         console.log('deleteBoard', err);
-      })
-   res.send('Board deleted ...');
+   const queryBoardDelete = 'DELETE FROM boards WHERE board_id = ?'
+   const queryListDelete = 'DELETE FROM boards_lists WHERE list_related_board = ?'
+   const queryCardDelete = 'DELETE FROM boards_cards WHERE card_related_board = ?'
+
+   const deleteCardsById = () => {
+      db.execute(queryCardDelete, [boardId])
+         .then(result => console.log('[deleteCardsById] affectedRows:', result[0].affectedRows))
+         .catch(err => {
+            console.log('[deleteCardsById]', err);
+         })
+   }
+   const deleteListsById = () => {
+      db.execute(queryListDelete, [boardId])
+         .then(result => console.log('[deleteListsById] affectedRows:', result[0].affectedRows))
+         .catch(err => {
+            console.log('[deleteListsById]', err);
+         })
+   }
+   const deleteBoardById = () => {
+      db.execute(queryBoardDelete, [boardId])
+         .then(result => console.log('[deleteBoardById] affectedRows:', result[0].affectedRows))
+         .catch(err => {
+            console.log('[deleteBoardById]', err);
+         })
+   }
+
+   Promise.all([
+      deleteCardsById(),
+      deleteListsById(),
+      deleteBoardById()
+   ])
+      .then(res.send('Board deleted ...'))
+      .catch((err) => console.log('Error in deleteBoard:', err))
 }
 
 exports.getBoards = getBoards;
