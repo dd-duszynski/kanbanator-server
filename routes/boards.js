@@ -3,10 +3,10 @@ const boardsControllers = require('../controllers/boards')
 const router = express.Router()
 
 // [POST] http://localhost:5000/api/boards
-router.post('/', boardsControllers.getBoards)
+router.post('/', boardsControllers.fetchAllBoards)
 
 // [GET] http://localhost:5000/api/boards/board/:bid
-router.get('/board/:bid', boardsControllers.getSingleBoard)
+router.get('/board/:bid', boardsControllers.fetchBoardById)
 
 // [POST] http://localhost:5000/api/boards/board/:bid
 router.post('/board/:bid', boardsControllers.editBoard)
