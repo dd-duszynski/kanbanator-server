@@ -1,57 +1,32 @@
-const db = require('../database/database');
+const Template = require('../models/templates')
 
-const getTemplates = async (req, res, next) => {
-   const query = 'SELECT * FROM templates'
-   await db.execute(query)
-      .then(result => {
-         res.status(201).json(result[0])
+const fetchAllTemplates = async (req, res, next) => {
+   try {
+      const [result] = await Template.fetchAll()
+      console.log('[getTemplates] All Boards fetched successfully!');
+      res.status(201).json(result)
+   } catch (err) {
+      console.log('[getTemplates]: ', err);
+      res.status(422).json({
+         error: err
       })
-      .catch(err => {
-         console.log('getTemplates', err);
-      })
-}
-
-const getTemplateByLink = async (req, res, next) => {
-   const templateLink = req.params.tlink;
-   let choosenTemplate = {
-      lists: [],
-      cards: []
    }
+}
 
-   const queryForLists = `
-      SELECT * FROM templates_lists l
-      JOIN templates t
-      ON l.list_related_template = t.template_id
-      WHERE t.template_link = ?
-   `
-
-   const queryForCards = `
-      SELECT * FROM templates_cards c
-      WHERE c.card_related_template = ?
-   `
-
-   await db.execute(queryForLists, [templateLink])
-      .then(lists => {
-         choosenTemplate.lists = lists[0]
+const fetchTemplateByLink = async (req, res, next) => {
+   const templateLink = req.params.tlink;
+   try {
+      const template = await Template.fetchByLink(templateLink)
+      console.log('[fetchBoardById] Board fetched successfully!');
+      res.status(201).json(template)
+   } catch (err) {
+      console.log('[getTemplateByLink - error]: ', err);
+      res.status(422).json({
+         error: err
       })
-      .catch(err => {
-         return res.status(422).json({
-            error: err
-         })
-      })
-
-   await db.execute(queryForCards, [templateLink])
-      .then(cards => {
-         choosenTemplate.cards = cards[0]
-         return res.status(201).json(choosenTemplate)
-      })
-      .catch(err => {
-         return res.status(422).json({
-            error: err
-         })
-      })
+   }
 }
 
 
-exports.getTemplates = getTemplates;
-exports.getTemplateByLink = getTemplateByLink;
+exports.fetchAllTemplates = fetchAllTemplates;
+exports.fetchTemplateByLink = fetchTemplateByLink;

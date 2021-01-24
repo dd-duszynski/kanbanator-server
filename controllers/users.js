@@ -1,8 +1,9 @@
 const bcrypt = require('bcryptjs')
 const { validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken')
-const db = require('../database/database');
 const HttpError = require('../models/http-error');
+const User = require('../models/user')
+const Board = require('../models/board')
 
 const signup = async (req, res, next) => {
    const errors = validationResult(req);
@@ -20,33 +21,28 @@ const signup = async (req, res, next) => {
    const { name, email, password } = req.body;
 
    let existingUser;
-   const queryFindUser = 'SELECT * FROM users WHERE user_email = ?'
    try {
-      existingUser = await db.query(queryFindUser, [email])
-      if (existingUser[0].length > 0) {
-         res
-            .status(400)
-            .json({
-               token: null,
-               email: null,
-               userId: null,
-               error: 'This e-mail already exists!'
-            })
+      [existingUser] = await User.find(email)
+      if (existingUser.length > 0) {
+         res.status(400).json({
+            token: null,
+            email: null,
+            userId: null,
+            error: 'This e-mail already exists!'
+         })
       }
    } catch (err) {
       console.log(err);
       return next(error);
    }
 
-   if (existingUser[0][0] !== undefined) {
-      res
-         .status(422)
-         .json({
-            token: null,
-            email: null,
-            userId: null,
-            error: 'User exists already, please login instead.'
-         })
+   if (existingUser[0] !== undefined) {
+      res.status(422).json({
+         token: null,
+         email: null,
+         userId: null,
+         error: 'User exists already, please login instead.'
+      })
       return next(error);
    }
 
@@ -58,20 +54,18 @@ const signup = async (req, res, next) => {
       return next(error);
    }
 
-   let newUser;
-   const queryInsertUser = `INSERT INTO USERS (user_id, user_name, user_email, user_password) VALUES (null, ?, ?, ?)`
    try {
-      newUser = await db.query(queryInsertUser, [name, email, hashedPassword])
+      const user = new User(name, email, hashedPassword)
+      await user.create()
+      console.log('[SIGNUP] User created successfully!');
    } catch (err) {
-      console.log('[SIGNUP - inserting user]', err);
-      res
-         .status(500)
-         .json({
-            token: null,
-            email: null,
-            userId: null,
-            error: 'Signing up failed, please try again later.'
-         })
+      console.log('[SIGNUP - error]: ', err);
+      res.status(500).json({
+         token: null,
+         email: null,
+         userId: null,
+         error: 'Signing up failed, please try again later.'
+      })
    }
 
    res.status(201).json({
@@ -100,11 +94,8 @@ const login = async (req, res, next) => {
    const { email, password } = req.body;
 
    let existingUser, boards;
-
-   const queryFindUser = 'SELECT * FROM users WHERE user_email = ?'
-   const queryBoards = 'SELECT * FROM boards WHERE board_author = ? '
    try {
-      [existingUser] = await db.query(queryFindUser, [email])
+      [existingUser] = await User.find(email)
       if (existingUser.length === 0) {
          res
             .status(400)
@@ -115,7 +106,7 @@ const login = async (req, res, next) => {
                error: 'Logging in failed, please try again later.'
             })
       }
-      [boards] = await db.query(queryBoards, [existingUser[0].user_id])
+      [boards] = await Board.fetchAll(existingUser[0].user_id)
    } catch (err) {
       res
          .status(400)

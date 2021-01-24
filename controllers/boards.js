@@ -1,4 +1,3 @@
-const db = require('../database/database');
 const Board = require('../models/board')
 const List = require('../models/list')
 const Card = require('../models/card')
@@ -41,6 +40,7 @@ const createBoard = async (req, res) => {
       await board.create()
       await list.create()
       console.log(`[createBoard] Board ${title} created successfully!`);
+      res.json(`Board ${title} & Default list added ...`);
    } catch (err) {
       console.log('[createBoard - error]', err);
       res.status(422).json({
@@ -48,7 +48,6 @@ const createBoard = async (req, res) => {
       })
    }
 
-   res.json(`Board ${title} & Default list added ...`);
 }
 
 const editBoard = async (req, res) => {
@@ -58,7 +57,7 @@ const editBoard = async (req, res) => {
    try {
       await Board.edit(boardId, title, description)
       console.log(`[editBoard] Board edited successfully!`);
-      res.send('Board edited successful...');
+      res.json('Board edited successful...');
    } catch (err) {
       console.log('[editBoard - error]', err);
       res.status(422).json({
@@ -75,7 +74,7 @@ const deleteBoard = (req, res) => {
       List.deleteByBoardId(boardId),
       Card.deleteByBoardId(boardId)
    ])
-      .then(res.send('[deleteBoard] Board deleted successfully!...'))
+      .then(res.json('[deleteBoard] Board deleted successfully!...'))
       .catch((err) => console.log('[deleteBoard - error]', err))
 }
 

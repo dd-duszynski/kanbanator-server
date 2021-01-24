@@ -1,16 +1,19 @@
-const db = require('../database/database');
+const Card = require('../models/card')
 
 const createCard = async (req, res, next) => {
-   const query = `INSERT INTO boards_cards VALUES(null, "${req.body.title}", "${req.body.description}", ${req.body.author}, 0, ${req.body.relatedBoard}, ${req.body.relatedList})`
-   
-   // To powinno być napisane tak: db.execute(query, [req.body.title, req.body..... ])
-   // INSERT INTO boards ?,?,?
-   
-   await db.execute(query)
-      .catch(err => {
-         console.log('[err]', err);
+   const { title, description, author, relatedBoard, relatedList } = req.body
+
+   try {
+      const card = new Card(title, description, author, relatedBoard, relatedList)
+      await card.create()
+      console.log(`[createCard] Card ${title} created successfully!`);
+      res.status(200).json(`Card ${title} created successfully!`);
+   } catch (err) {
+      console.log('[createCard - error]', err);
+      res.status(422).json({
+         error: err
       })
-   res.json(`Card ${req.body.title} added ...`);
+   }
 }
 
 
