@@ -18,18 +18,27 @@ const fetchAllBoards = async (req, res) => {
    }
 }
 
-const fetchBoardById = async (req, res) => {
+const fetchBoardById = (req, res) => {
    const boardId = req.params.bid;
-   try {
-      const board = await Board.fetchById(boardId)
-      console.log('[fetchBoardById] Board fetched successfully!');
-      res.status(201).json(board)
-   } catch (err) {
-      console.log('[fetchBoardById - error]', err);
-      res.status(422).json({
-         error: err
-      })
+   let choosenBoard = {
+      lists: [],
+      cards: []
    }
+   Promise.all([
+      List.fetchByBoardId(boardId),
+      Card.fetchByBoardId(boardId)
+   ])
+      .then(data => {
+         choosenBoard.lists = data[0][0];
+         choosenBoard.cards = data[1][0]
+      })
+      .then(() => res.status(201).json(choosenBoard))
+      .catch(err => {
+         console.log('[Board.fetchBoardById - error]', err);
+         res.status(422).json({
+            error: err
+         })
+      })
 }
 
 const createBoard = async (req, res) => {
@@ -47,7 +56,6 @@ const createBoard = async (req, res) => {
          error: err
       })
    }
-
 }
 
 const editBoard = async (req, res) => {

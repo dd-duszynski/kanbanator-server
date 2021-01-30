@@ -1,6 +1,4 @@
 const db = require('../database/database');
-const List = require('./list')
-const Card = require('./card')
 
 class Board {
    constructor(boardId, title, description, image_url, author) {
@@ -21,25 +19,6 @@ class Board {
       return db.execute(query, [userId])
    }
 
-   static async fetchById(boardId) {
-      let choosenBoard = {
-         lists: [],
-         cards: []
-      }
-      try {
-         const [lists] = await List.fetchByBoardId(boardId)
-         const [cards] = await Card.fetchByBoardId(boardId)
-         choosenBoard.lists = lists
-         choosenBoard.cards = cards
-      } catch (err) {
-         console.log('[Board.fetchById]', err);
-         res.status(422).json({
-            error: err
-         })
-      }
-      return choosenBoard
-   }
-
    static edit(boardId, title, description) {
       const query = `
          UPDATE boards
@@ -51,7 +30,7 @@ class Board {
       return db.execute(query, [boardId])
    }
 
-   static delete(boardId){
+   static delete(boardId) {
       const query = 'DELETE FROM boards WHERE board_id = ?'
       return db.execute(query, [boardId])
    }
