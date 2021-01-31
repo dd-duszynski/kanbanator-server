@@ -17,6 +17,20 @@ class Card {
       return db.execute(query)
    }
 
+   static edit(cardId, title, description, labels, board, list) {
+      const query = `
+         UPDATE boards_cards   
+         SET 
+            card_title = "${title}",
+            card_description = "${description}",
+            card_labels = ${labels},
+            card_related_board = ${board},
+            card_related_list = ${list}
+         WHERE card_id = ${cardId}
+      `
+      return db.execute(query, [cardId])
+   }
+
    static fetchByBoardId(boardId) {
       const query = `
          SELECT * FROM boards_cards c
@@ -31,6 +45,14 @@ class Card {
             WHERE card_related_board = ?
       `
       return db.execute(query, [boardId])
+   }
+
+   static deleteByCardId(cardId) {
+      const query = `
+         DELETE FROM boards_cards 
+            WHERE card_id = ?
+      `
+      return db.execute(query, [cardId])
    }
 }
 

@@ -34,7 +34,6 @@ class Board {
       const query = 'DELETE FROM boards WHERE board_id = ?'
       return db.execute(query, [boardId])
    }
-
 }
 
 
